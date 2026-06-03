@@ -1,9 +1,4 @@
-
-
 CREATE DATABASE medflow_db;
-
-
-
 USE medflow_db;
 
 -- ===================================
