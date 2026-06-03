@@ -13,4 +13,10 @@ class SpecialiteRepository {
         $stmt->execute();
         return $stmt->fetchAll();
     }
+    public function findById($id){
+        $query = "SELECT * FROM specialites WHERE id = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch();
+    }
 }
