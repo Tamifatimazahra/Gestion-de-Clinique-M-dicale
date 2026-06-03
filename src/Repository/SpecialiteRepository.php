@@ -19,4 +19,12 @@ class SpecialiteRepository {
         $stmt->execute([':id' => $id]);
         return $stmt->fetch();
     }
+    public function create($nom, $description){
+        $query = "INSERT INTO specialites (nom, description) VALUES (:nom, :description)";
+        $stmt = $this->db->prepare($query);
+        return $stmt->execute([
+            ':nom' => $nom,
+            ':description' => $description
+        ]);
+    }
 }
