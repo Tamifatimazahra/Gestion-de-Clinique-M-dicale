@@ -27,4 +27,14 @@ class SpecialiteRepository {
             ':description' => $description
         ]);
     }
+    
+    public function update($id, $nom, $description){
+        $query = "UPDATE specialites SET nom = :nom, description = :description WHERE id = :id";
+        $stmt = $this->db->prepare($query);
+        return $stmt->execute([
+            ':id' => $id,
+            ':nom' => $nom,
+            ':description' => $description
+        ]);
+    }
 }
