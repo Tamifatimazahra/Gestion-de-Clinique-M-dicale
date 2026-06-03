@@ -37,4 +37,10 @@ class SpecialiteRepository {
             ':description' => $description
         ]);
     }
+
+    public function delet($id){
+        $query = "DELETE FROM specialites WHERE id = :id";
+        $stmt = $this->db->prepare($query);
+        return $stmt->execute([':id' => $id]);
+    }
 }
