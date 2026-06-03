@@ -1,8 +1,10 @@
 <?php
 
+require_once "src/Repository/RendezVousRepository.php";
+
 class MedecinController
 {
-    private RyendezVousRepository $repo;
+    private RendezVousRepository $repo;
 
     public function __construct()
     {
