@@ -26,4 +26,22 @@ class RendezVousRepository {
 
         return $kpis;
     }
+
+    public function getMedecinsPerformance(){
+        $query = "SELECT 
+                    u.nom AS medecin_nom, 
+                    u.prenom AS medecin_prenom, 
+                    s.nom AS specialite,
+                    COUNT(r.id) AS total_rdv_termine
+                  FROM rendez_vous r
+                  JOIN medecins m ON r.id_medecin = m.id
+                  JOIN users u ON m.id_user = u.id
+                  JOIN specialites s ON m.id_specialite = s.id
+                  WHERE r.statut = 'Terminé'
+                  GROUP BY m.id, u.nom, u.prenom, s.nom
+                  ORDER BY total_rdv_termine DESC";
+
+        $stmt = $this->db->query($query);
+        return $stmt->fetchAll();
+    }
 }
