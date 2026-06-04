@@ -35,5 +35,11 @@ class AdminController {
                 exit();
             }
         }
+        if(isset($_GET['action'])&& $_GET['action'] === 'delete_specialite' && isset($_GET['id'])){
+            $id = intval($_GET['id']);
+            $this->specialiteRepo->delete($id);
+            header('Location: specialites.php');
+            exit();
+        }
     }
 }
