@@ -18,4 +18,9 @@ class AdminController {
         $this->userRepo = new UserRepository($dbConn);
         $this->rendezVousRepo = new RendezVousRepository($dbConn);
     }
+    public function afficherDashboard(){
+        $stats_global = $this->rendezVousRepo->getGlobalKPIs();
+        $medecins_stats = $this->rendezVousRepo->getMedecinsPerformance();
+        require_once __DIR__ . '/../../templates/admin/dashboard.php';
+    }
 }
