@@ -69,5 +69,10 @@ class AdminController {
             header('Location: medcins.php');
             exit();
         }
+
+        $medecins = $this->userRepo->findAllMedecins();
+        $specialites = $this->specialiteRepo->findAll();
+
+        require_once __DIR__ . '/../../templates/admin.medcins.php';
     }
 }
