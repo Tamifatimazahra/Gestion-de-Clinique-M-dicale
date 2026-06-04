@@ -45,4 +45,12 @@ class UserRepository{
             return false;
         }
     }
+    public function toggleMedecinStatus($medecinId, $status){
+        $query = "UPDATE medecins SET actif = :status WHERE id = :id";
+        $stmt = $this->db->prepare($query);
+        return $stmt->execute([
+            ':status' => $status ? 1 : 0,
+            ':id' => $medecinId
+        ]);
+    }
 }
