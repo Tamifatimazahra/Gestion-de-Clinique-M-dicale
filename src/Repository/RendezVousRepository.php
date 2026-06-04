@@ -18,5 +18,10 @@ class RendezVousRepository {
         $q3 = "SELECT COUNT(*) AS total_patients FROM users WHERE role = 'patient'";
         $stmt3 = $this->db->query($q3);
         $res3 = $stmt3->fetch();
+
+        $kpis = new stdClass();
+        $kpis->taux_annulation = $res1->taux_annulation ?? 0;
+        $kpis->total_medecins = $res2->total_medecins ?? 0;
+        $kpis->total_patients = $res3->total_patients ?? 0;
     }
 }
