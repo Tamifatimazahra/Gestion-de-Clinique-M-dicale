@@ -23,5 +23,7 @@ class RendezVousRepository {
         $kpis->taux_annulation = $res1->taux_annulation ?? 0;
         $kpis->total_medecins = $res2->total_medecins ?? 0;
         $kpis->total_patients = $res3->total_patients ?? 0;
+
+        return $kpis;
     }
 }
