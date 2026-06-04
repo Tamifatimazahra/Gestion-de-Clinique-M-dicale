@@ -38,6 +38,8 @@ class UserRepository{
                 ':id_user' => $idUser,
                 ':id_specialite' => $id_specialite
             ]);
+            $this->db->commit();
+            return true;
         }
     }
 }
