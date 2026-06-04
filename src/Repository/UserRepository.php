@@ -30,6 +30,14 @@ class UserRepository{
                 ':email' => $email,
                 ':password' => $password
             ]);
+            $idUser = $this->db->lastInsertId();
+
+            $queryMedecin = "INSERT INTO medecins (id_user, id_specialite, actif) VALUES (:id_user, :id_specialite, TRUE)";
+            $stmtMedecin = $this->db->prepare($queryMedecin);
+            $stmtMedecin->execute([
+                ':id_user' => $idUser,
+                ':id_specialite' => $id_specialite
+            ]);
         }
     }
 }
