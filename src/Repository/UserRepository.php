@@ -17,4 +17,19 @@ class UserRepository{
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
+    public function createMedecin($nom, $prenom, $email, $password, $id_specialite){
+        try{
+            $this->db->beginTransaction();
+
+            $queryUser = "INSERT INTO users (nom, prenom, email, password, role) VALUES(:nom, ;prenom, :email, :password, 'medecin')";
+            $stmtUser = $this->db->prepare($queryUser);
+            $stmtUser->execute([
+                ':nom' => $nom,
+                ':prenom' => $prenom,
+                ':email' => $email,
+                ':password' => $password
+            ]);
+        }
+    }
 }
