@@ -14,5 +14,9 @@ class RendezVousRepository {
         $q2 = "SELECT COUNT(*) AS total_medecins FROM medecins WHERE actif = TRUE";
         $stmt2 = $this->db->query($q2);
         $res2 = $stmt2->fetch();
+
+        $q3 = "SELECT COUNT(*) AS total_patients FROM users WHERE role = 'patient'";
+        $stmt3 = $this->db->query($q3);
+        $res3 = $stmt3->fetch();
     }
 }
