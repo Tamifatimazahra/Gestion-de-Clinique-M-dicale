@@ -1,3 +1,11 @@
+<?php
+require_once __DIR__ . '/../../src/Controller/AdminController.php';
+$controller = new AdminController();
+$controller->gererSpecialites();
+return;
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
