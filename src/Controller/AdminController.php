@@ -60,5 +60,14 @@ class AdminController {
                 exit();
             }
         }
+        if (isset($_GET['action']) && $_GET['action'] === 'toggle_status' && isset($_GET['id']) && isset($_GET['status'])) {
+            $id = intval($_GET['id']);
+            $current_status = intval($_GET['status']);
+            $new_status = ($current_status === 1) ? 0 : 1; // Ila can 1 y-rj3 0, o l-3ks
+
+            $this->userRepo->toggleMedecinStatus($id, $new_status);
+            header('Location: medcins.php');
+            exit();
+        }
     }
 }
