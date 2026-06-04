@@ -44,6 +44,21 @@ class AdminController {
 
         $specialites = $this->specialiteRepo->findAll();
         require_once __DIR__ . '/../../templates/admin/specialites.php';
-        
+
+    }
+    public function gererMedecins(){
+        if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_medecin'){
+            $nom = trim($_POST['nom']);
+            $prenom = trim($_POST['prenom']);
+            $email = trim($_POST['email']);
+            $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Hachage safe dyal password
+            $id_specialite = intval($_POST['id_specialite']);
+
+            if (!empty($nom) && !empty($email) && !empty($id_specialite)) {
+                $this->userRepo->createMedecin($nom, $prenom, $email, $password, $id_specialite);
+                header('Location: medcins.php');
+                exit();
+            }
+        }
     }
 }
