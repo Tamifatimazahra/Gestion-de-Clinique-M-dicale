@@ -23,4 +23,17 @@ class AdminController {
         $medecins_stats = $this->rendezVousRepo->getMedecinsPerformance();
         require_once __DIR__ . '/../../templates/admin/dashboard.php';
     }
+
+    public function gererSpecialites(){
+        if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_specialite'){
+            $nom = trim($_POST['nom']);
+            $description = trim($_POST['description']);
+
+            if (!empty($nom)){
+                $this->specialiteRepo->create($nom, $description);
+                header('Location: specialites.php');
+                exit();
+            }
+        }
+    }
 }
