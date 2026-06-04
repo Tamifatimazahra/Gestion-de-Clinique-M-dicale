@@ -13,5 +13,9 @@ class AdminController {
     public function __construct(){
         $database = new Database();
         $dbConn = $database->getConnection();
+
+        $this->specialiteRepo = new SpecialiteRepository($dbConn);
+        $this->userRepo = new UserRepository($dbConn);
+        $this->rendezVousRepo = new RendezVousRepository($dbConn);
     }
 }
