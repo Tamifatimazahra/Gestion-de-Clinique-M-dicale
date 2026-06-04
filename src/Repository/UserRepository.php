@@ -40,6 +40,9 @@ class UserRepository{
             ]);
             $this->db->commit();
             return true;
+        }catch (Exception $e){
+            $this->db->rollBack();
+            return false;
         }
     }
 }
