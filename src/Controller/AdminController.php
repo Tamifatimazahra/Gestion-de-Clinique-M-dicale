@@ -41,5 +41,9 @@ class AdminController {
             header('Location: specialites.php');
             exit();
         }
+
+        $specialites = $this->specialiteRepo->findAll();
+        require_once __DIR__ . '/../../templates/admin/specialites.php';
+        
     }
 }
