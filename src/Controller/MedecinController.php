@@ -83,6 +83,8 @@ class MedecinController {
         return $repo->trouverRendezVousActifs($_SESSION['user_id']);
     }
 
+
+    
     public function afficherHistorique() {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'medecin') {
             header('Location: ../auth/login.php');
