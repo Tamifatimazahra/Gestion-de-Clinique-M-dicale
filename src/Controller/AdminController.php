@@ -1,9 +1,9 @@
 <?php
 
-require_once __DIR__ . '/../../config/database.php';
-require_once __DIR__ . '/../Repository/SpecialiteRepository.php';
-require_once __DIR__ . '/../Repository/UserRepository.php';
-require_once __DIR__ . '/../Repository/RendezVousRepository.php';
+require_once dirname(__DIR__, 2) . '/config/database.php';
+require_once dirname(__DIR__, 2) . '/src/Repository/SpecialiteRepository.php';
+require_once dirname(__DIR__, 2) . '/src/Repository/UserRepository.php';
+require_once dirname(__DIR__, 2) . '/src/Repository/RendezVousRepository.php';
 
 class AdminController {
     private $specialiteRepo;
@@ -18,10 +18,12 @@ class AdminController {
         $this->userRepo = new UserRepository($dbConn);
         $this->rendezVousRepo = new RendezVousRepository($dbConn);
     }
+    
     public function afficherDashboard(){
         $stats_global = $this->rendezVousRepo->getGlobalKPIs();
         $medecins_stats = $this->rendezVousRepo->getMedecinsPerformance();
-        require_once __DIR__ . '/../../templates/admin/dashboard.php';
+        
+        require_once dirname(__DIR__, 2) . '/templates/admin/dashboard_view.php';
     }
 
     public function gererSpecialites(){
@@ -35,7 +37,8 @@ class AdminController {
                 exit();
             }
         }
-        if(isset($_GET['action'])&& $_GET['action'] === 'delete_specialite' && isset($_GET['id'])){
+
+        if(isset($_GET['action']) && $_GET['action'] === 'delete_specialite' && isset($_GET['id'])){
             $id = intval($_GET['id']);
             $this->specialiteRepo->delete($id);
             header('Location: specialites.php');
@@ -43,15 +46,16 @@ class AdminController {
         }
 
         $specialites = $this->specialiteRepo->findAll();
-        require_once __DIR__ . '/../../templates/admin/specialites.php';
-
+        
+        require_once dirname(__DIR__, 2) . '/templates/admin/specialites_view.php';
     }
+    
     public function gererMedecins(){
         if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_medecin'){
             $nom = trim($_POST['nom']);
             $prenom = trim($_POST['prenom']);
             $email = trim($_POST['email']);
-            $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Hachage safe dyal password
+            $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
             $id_specialite = intval($_POST['id_specialite']);
 
             if (!empty($nom) && !empty($email) && !empty($id_specialite)) {
@@ -60,19 +64,21 @@ class AdminController {
                 exit();
             }
         }
+
         if (isset($_GET['action']) && $_GET['action'] === 'toggle_status' && isset($_GET['id']) && isset($_GET['status'])) {
             $id = intval($_GET['id']);
             $current_status = intval($_GET['status']);
-            $new_status = ($current_status === 1) ? 0 : 1; // Ila can 1 y-rj3 0, o l-3ks
+            $new_status = ($current_status === 1) ? 0 : 1; 
 
             $this->userRepo->toggleMedecinStatus($id, $new_status);
             header('Location: medcins.php');
             exit();
         }
 
+        
         $medecins = $this->userRepo->findAllMedecins();
-        $specialites = $this->specialiteRepo->findAll();
+        $specialites = $this->specialiteRepo->findAll(); 
 
-        require_once __DIR__ . '/../../templates/admin.medcins.php';
+        require_once dirname(__DIR__, 2) . '/templates/admin/medcins_view.php';
     }
 }

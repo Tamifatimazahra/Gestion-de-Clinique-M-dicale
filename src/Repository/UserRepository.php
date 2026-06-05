@@ -7,7 +7,7 @@ class UserRepository{
         $this->db = $databaseConnection;
     }
 
-    piblic function findAllMedecins(){
+    public function findAllMedecins(){ 
         $query = "SELECT u.id AS user_id, m.id AS medecin_id, u.nom, u.prenom, u.email, m.actif, s.nom AS specialite
             FROM medecins m
             JOIN users u ON m.id_user = u.id
@@ -22,7 +22,7 @@ class UserRepository{
         try{
             $this->db->beginTransaction();
 
-            $queryUser = "INSERT INTO users (nom, prenom, email, password, role) VALUES(:nom, ;prenom, :email, :password, 'medecin')";
+            $queryUser = "INSERT INTO users (nom, prenom, email, password, role) VALUES(:nom, :prenom, :email, :password, 'medecin')";
             $stmtUser = $this->db->prepare($queryUser);
             $stmtUser->execute([
                 ':nom' => $nom,
@@ -45,6 +45,7 @@ class UserRepository{
             return false;
         }
     }
+    
     public function toggleMedecinStatus($medecinId, $status){
         $query = "UPDATE medecins SET actif = :status WHERE id = :id";
         $stmt = $this->db->prepare($query);
