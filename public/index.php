@@ -1,11 +1,11 @@
 <?php
-// العياط بـ require_once العادي بلا تبرزيط
+
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/Controller/HomeController.php';
 
 global $pdo;
 
-// إدخال الـ pdo للـ Repo والـ Repo للـ Controller
+
 $medecinRepo = new MedecinRepository($pdo);
 $homeController = new HomeController($medecinRepo);
 
@@ -48,7 +48,7 @@ $top_medecins = $data['top_medecins'];
                     Créer un compte
                 </a>
                 <a href="../templates/auth/login.php" class="px-5 py-2.5 bg-clinicPrimary hover:bg-slate-800 text-white font-bold text-sm rounded-xl transition shadow-sm">
-                    Se Connecter 🔐
+                    Se Connecter 
                 </a>
             </div>
         </div>
@@ -83,7 +83,7 @@ $top_medecins = $data['top_medecins'];
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php if (empty($top_medecins)): ?>
                 <div class="col-span-full text-center p-12 bg-white rounded-2xl border border-slate-200 text-slate-400 text-sm font-medium">
-                    ✨ Aucun médecin n'est inscrit pour le moment.
+                     Aucun médecin n'est inscrit pour le moment.
                 </div>
             <?php else: ?>
                 <?php foreach ($top_medecins as $med): 

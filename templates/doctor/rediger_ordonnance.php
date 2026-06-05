@@ -1,53 +1,15 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'medecin') {
-    header('Location: ../auth/login.php');
-    exit();
-}
-
 require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../src/Controller/OrdonnanceController.php';
 
-$id_rdv = isset($_GET['id_rdv']) ? intval($_GET['id_rdv']) : 0;
-$message = "";
+global $pdo;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    global $pdo;
-    $description = trim($_POST['description']);
-    $id_rdv_post = intval($_POST['id_rendez_vous']);
+// نداء للـ Controller وجلب الداتا الواجدة
+$controller = new OrdonnanceController($pdo);
+$data = $controller->handleRedigerOrdonnance();
 
-    if (!empty($description) && $id_rdv_post > 0) {
-        try {
-            $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM ordonnances WHERE id_rendez_vous = ?");
-            $checkStmt->execute([$id_rdv_post]);
-            $deja_existe = $checkStmt->fetchColumn();
-
-            $pdo->beginTransaction();
-
-            if ($deja_existe == 0) {
-                $stmt1 = $pdo->prepare("INSERT INTO ordonnances (description, id_rendez_vous) VALUES (?, ?)");
-                $stmt1->execute([$description, $id_rdv_post]);
-            } else {
-                $stmt1 = $pdo->prepare("UPDATE ordonnances SET description = ? WHERE id_rendez_vous = ?");
-                $stmt1->execute([$description, $id_rdv_post]);
-            }
-
-            $stmt2 = $pdo->prepare("UPDATE rendez_vous SET statut = 'Terminé' WHERE id = ?");
-            $stmt2->execute([$id_rdv_post]);
-
-            $pdo->commit();
-            header('Location: dashboard.php');
-            exit();
-
-        } catch (Exception $e) {
-            $pdo->rollBack();
-            $message = "Erreur lors de l'enregistrement : " . $e->getMessage();
-        }
-    } else {
-        $message = "Veuillez rédiger la description de l'ordonnance.";
-    }
-}
+$id_rdv = $data['id_rdv'];
+$message = $data['message'];
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -64,9 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         clinicGreen: '#9CC943',
                         clinicGreenHover: '#88b236',
                         clinicPrimary: '#1e293b',
-                        // لون الخلفية: أزرق جليدي خافت ومريح جداً
                         medicalIceBg: '#eef2f7', 
-                        // لون الـ Card: أزرق طبي ناعم مفتوح
                         medicalCardBg: '#e0e7ff',
                     }
                 }
@@ -76,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="bg-medicalIceBg text-slate-700 font-sans min-h-screen flex items-center justify-center p-4">
 
-    <!-- الـ Card بلون أزرق عيادات هادئ ومريح ومبدل على الأبيض -->
     <div class="w-full max-w-2xl bg-white border border-slate-200/80 shadow-[0_10px_30px_rgba(30,41,59,0.05)] rounded-3xl p-8">
         <div class="mb-6">
             <span class="text-xs font-bold text-clinicGreen uppercase tracking-widest">Étape Finale</span>
@@ -95,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div>
                 <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-3">Détails du traitement (Médicaments, Posologie...)</label>
-                <!-- التكست اريا داخلا فيها لمسة د الأزرق الطبي الخفيف -->
                 <textarea name="description" rows="8" required placeholder="Ex: Paracétamol 500mg : 1 comprimé 3 fois par jour..." 
                     class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-slate-800 placeholder-slate-400 focus:outline-none focus:border-clinicGreen focus:ring-2 focus:ring-clinicGreen/20 transition text-sm font-mono leading-relaxed shadow-inner"></textarea>
             </div>
