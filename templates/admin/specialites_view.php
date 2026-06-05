@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedFlow | Gestion Spécialités</title>
+    <title>MedFlow | Spécialités Médicales</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -32,8 +32,7 @@
                 <nav class="space-y-1">
                     <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium transition">Dashboard</a>
                     <a href="medcins.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium transition">Gestion Médecins</a>
-                    <a href="specialites.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium transition">Spécialités</a>
-                    <a href="creneaux.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium transition">Horaires Médecins</a>
+                    <a href="specialites.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-clinicGreen/10 text-clinicGreen font-semibold text-sm border-l-4 border-clinicGreen">Spécialités</a>
                 </nav>
             </div>
             <div class="pt-4 border-t border-slate-100 text-xs text-slate-400 font-semibold">Mode Administrateur</div>
@@ -50,15 +49,18 @@
                     <h3 class="text-lg font-bold text-clinicPrimary mb-4">Ajouter une Spécialité</h3>
                     <form action="specialites.php" method="POST" class="space-y-4">
                         <input type="hidden" name="action" value="add_specialite">
+                        
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wide text-slate-400 mb-2">Nom de la spécialité</label>
-                            <input type="text" name="nom" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-clinicPrimary focus:outline-none focus:border-clinicGreen focus:bg-white transition">
+                            <label class="block text-xs font-bold uppercase tracking-wide text-slate-400 mb-1">Nom de la spécialité</label>
+                            <input type="text" name="nom" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-clinicPrimary focus:outline-none focus:border-clinicGreen focus:bg-white transition">
                         </div>
+
                         <div>
-                            <label class="block text-xs font-bold uppercase tracking-wide text-slate-400 mb-2">Description</label>
-                            <textarea name="description" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-clinicPrimary focus:outline-none focus:border-clinicGreen focus:bg-white transition"></textarea>
+                            <label class="block text-xs font-bold uppercase tracking-wide text-slate-400 mb-1">Description</label>
+                            <textarea name="description" rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-clinicPrimary focus:outline-none focus:border-clinicGreen focus:bg-white transition"></textarea>
                         </div>
-                        <button type="submit" class="w-full py-3 bg-clinicGreen hover:bg-clinicGreenHover text-white font-black text-sm rounded-xl shadow-[0_4px_12px_rgba(156,201,67,0.25)] transition duration-200 uppercase tracking-wider">
+
+                        <button type="submit" class="w-full py-3 mt-2 bg-clinicGreen hover:bg-clinicGreenHover text-white font-black text-sm rounded-xl shadow-[0_4px_12px_rgba(156,201,67,0.25)] transition duration-200 uppercase tracking-wider">
                             Enregistrer
                         </button>
                     </form>
@@ -70,23 +72,23 @@
                     </div>
 
                     <div class="divide-y divide-slate-100">
-                        <?php if (empty($specialites)): ?>
-                            <div class="p-12 text-center text-slate-400 text-sm font-medium">Aucune spécialité trouvée.</div>
+                        <?php if (!isset($specialites) || empty($specialites)): ?>
+                            <div class="p-12 text-center text-slate-400 text-sm font-medium">Aucune spécialité configurée pour le moment.</div>
                         <?php else: ?>
                             <?php foreach ($specialites as $spec): 
-                                $specArray = is_object($spec) ? (array)$spec : $spec;
-                                $s_id = $specArray['id'] ?? $specArray['id_specialite'] ?? array_values($specArray)[0] ?? '';
-                                $s_nom = $specArray['nom'] ?? $specArray['nom_specialite'] ?? $specArray['libelle'] ?? array_values($specArray)[1] ?? 'Inconnue';
-                                $s_desc = $specArray['description'] ?? 'Pas de description';
+                                // Hna t-n-choufou wach object wla array bach n-تفاداو l'error b-marra
+                                $s_id = is_object($spec) ? $spec->id : $spec['id'];
+                                $s_nom = is_object($spec) ? $spec->nom : $spec['nom'];
+                                $s_desc = is_object($spec) ? $spec->description : $spec['description'];
                             ?>
                                 <div class="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition hover:bg-slate-50/40">
                                     <div>
                                         <h4 class="text-base font-bold text-clinicPrimary"><?= htmlspecialchars($s_nom) ?></h4>
-                                        <p class="text-xs text-slate-400 mt-1"><?= htmlspecialchars($s_desc) ?></p>
-                                        <p class="text-[10px] text-slate-400 font-mono mt-1">ID: #SPEC-<?= $s_id ?></p>
+                                        <p class="text-sm text-slate-400 mt-1"><?= htmlspecialchars($s_desc) ?></p>
+                                        <span class="text-xs text-slate-400 font-mono inline-block mt-2">ID: #SPEC-<?= $s_id ?></span>
                                     </div>
-                                    <div class="flex items-center gap-2">
-                                        <a href="specialites.php?action=delete_specialite&id=<?= $s_id ?>" onclick="return confirm('Voulez-vous vraiment supprimer cette spécialité ?')" class="px-3 py-2 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-500 font-medium text-xs rounded-xl border border-slate-200 transition shadow-sm">
+                                    <div>
+                                        <a href="specialites.php?action=delete_specialite&id=<?= $s_id ?>" onclick="return confirm('Voulez-vous vraiment supprimer cette spécialité ?')" class="px-4 py-2 text-xs font-bold rounded-xl bg-slate-100 hover:bg-red-50 hover:text-red-600 border border-slate-200 hover:border-red-200 text-slate-600 transition block text-center">
                                             Supprimer
                                         </a>
                                     </div>
