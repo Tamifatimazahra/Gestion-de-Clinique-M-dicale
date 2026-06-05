@@ -1,6 +1,6 @@
 <?php
 
-require_once "src/Repository/RendezVousRepository.php";
+require_once __DIR__ . "/../Repository/RendezVousRepository.php";
 
 class MedecinController
 {
@@ -15,6 +15,8 @@ class MedecinController
     {
         $rdvs = $this->repo->findByMedecin($medecinId);
 
-        require "templates/doctor/planning.php";
+    
+
+        require __DIR__ . "/../../templates/doctor/planning.php";
     }
 }
