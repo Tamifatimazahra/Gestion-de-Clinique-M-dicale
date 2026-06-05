@@ -1,6 +1,9 @@
-
 CREATE DATABASE medflow_db;
 USE medflow_db;
+
+-- ===================================
+-- USERS
+-- ===================================
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -11,6 +14,9 @@ CREATE TABLE users (
     role ENUM('admin', 'medecin', 'patient') NOT NULL
 );
 
+-- ===================================
+-- SPECIALITES
+-- ===================================
 
 CREATE TABLE specialites (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -18,7 +24,9 @@ CREATE TABLE specialites (
     description VARCHAR(255)
 );
 
-
+-- ===================================
+-- MEDECINS
+-- ===================================
 
 CREATE TABLE medecins (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -37,6 +45,9 @@ CREATE TABLE medecins (
         ON DELETE RESTRICT
 );
 
+-- ===================================
+-- CRENEAUX
+-- ===================================
 
 CREATE TABLE creneaux (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -54,7 +65,9 @@ CREATE TABLE creneaux (
         ON DELETE CASCADE
 );
 
-
+-- ===================================
+-- RENDEZ_VOUS
+-- ===================================
 
 CREATE TABLE rendez_vous (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -85,7 +98,9 @@ CREATE TABLE rendez_vous (
         ON DELETE CASCADE
 );
 
-
+-- ===================================
+-- ORDONNANCES
+-- ===================================
 
 CREATE TABLE ordonnances (
     id INT AUTO_INCREMENT PRIMARY KEY,

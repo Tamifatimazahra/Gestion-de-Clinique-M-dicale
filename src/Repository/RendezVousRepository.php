@@ -1,48 +1,68 @@
 <?php
-
 class RendezVousRepository {
-    private $db;
+    private $pdo;
 
-    public function __construct($databaseConnection){
-        $this->db = $databaseConnection;
+    public function __construct($pdo) {
+        $this->pdo = $pdo;
     }
+
+  
+    public function trouverRendezVousActifs($id_user_medecin) {
+        try {
+            
+         
+            $sql = "SELECT 
+                        r.id, 
+                        r.statut, 
+                        c.date_creneau, 
+                        c.heure_debut, 
+                        u.nom AS patient_nom
+                    FROM rendez_vous r
+                    INNER JOIN creneaux c ON r.id_creneau = c.id
+                    INNER JOIN medecins m ON r.id_medecin = m.id
+                    INNER JOIN users u ON r.id_patient = u.id
+                    WHERE m.id_user = ? AND r.statut IN ('En attente', 'Confirme')
+                    ORDER BY c.date_creneau ASC, c.heure_debut ASC";
+
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$id_user_medecin]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+
     
-    public function getGlobalKPIs(){
-        $q1 = "SELECT ROUND((COUNT(CASE WHEN statut = 'Annule' THEN 1 END) / COUNT(*)) * 100, 1) AS taux_annulation FROM rendez_vous";
-        $stmt1 = $this->db->query($q1);
-        $res1 = $stmt1->fetch();
+    public function trouverRendezVousPasses($id_user_medecin) {
+        try {
+            $sql = "SELECT 
+                        r.id, 
+                        r.statut, 
+                        c.date_creneau, 
+                        c.heure_debut, 
+                        u.nom AS patient_nom
+                    FROM rendez_vous r
+                    INNER JOIN creneaux c ON r.id_creneau = c.id
+                    INNER JOIN medecins m ON r.id_medecin = m.id
+                    INNER JOIN users u ON r.id_patient = u.id
+                    WHERE m.id_user = ? AND r.statut IN ('Termine', 'Annule')
+                    ORDER BY c.date_creneau DESC, c.heure_debut DESC";
 
-        $q2 = "SELECT COUNT(*) AS total_medecins FROM medecins WHERE actif = TRUE";
-        $stmt2 = $this->db->query($q2);
-        $res2 = $stmt2->fetch();
-
-        $q3 = "SELECT COUNT(*) AS total_patients FROM users WHERE role = 'patient'";
-        $stmt3 = $this->db->query($q3);
-        $res3 = $stmt3->fetch();
-
-        $kpis = new stdClass();
-        $kpis->taux_annulation = $res1->taux_annulation ?? 0;
-        $kpis->total_medecins = $res2->total_medecins ?? 0;
-        $kpis->total_patients = $res3->total_patients ?? 0;
-
-        return $kpis;
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$id_user_medecin]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            return [];
+        }
     }
 
-    public function getMedecinsPerformance(){
-        $query = "SELECT 
-                    u.nom AS medecin_nom, 
-                    u.prenom AS medecin_prenom, 
-                    s.nom AS specialite,
-                    COUNT(r.id) AS total_rdv_termine
-                  FROM rendez_vous r
-                  JOIN medecins m ON r.id_medecin = m.id
-                  JOIN users u ON m.id_user = u.id
-                  JOIN specialites s ON m.id_specialite = s.id
-                  WHERE r.statut = 'Terminé'
-                  GROUP BY m.id, u.nom, u.prenom, s.nom
-                  ORDER BY total_rdv_termine DESC";
 
-        $stmt = $this->db->query($query);
-        return $stmt->fetchAll();
+    public function modifierStatut($id_rdv, $nouveau_statut) {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE rendez_vous SET statut = ? WHERE id = ?");
+            return $stmt->execute([$nouveau_statut, $id_rdv]);
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }

@@ -1,28 +1,18 @@
 <?php
+// إعدادات الاتصال بقاعدة البيانات الجديدة د الجروب
+$host = 'localhost';
+$dbname = 'medflow_db'; // الاسم الجديد اللي تفاهمتوا عليه
+$username = 'root';
+$password = '';
 
-class Database{
-    private $host = "localhost";
-    private $db_name = "medflow_db";
-    private $username = "root";
-    private $password = "";
-    private $conn = null;
-
-    public function getConnection(){
-        if ($this->conn === null){
-            try{
-                $this->conn = new PDO(
-                    "mysql:host=" .$this->host . ";dbname=" .$this->db_name . ";charset=utf8",
-                    $this->username,
-                    $this->password
-                );
-
-                $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-            }
-            catch (PDOException $exeception){
-                die("Erreur de connexion : " . $exeception->getMessage());
-            }
-        }
-        return $this->conn;
-    }
+try {
+    // فتح الاتصال في سطر واحد مباشر
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
+    
+    // تفعيل التنبيه بالأخطاء باش يلا غلطتي ف شي كود SQL يعاونك السيرفر ديريكت
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+} catch (PDOException $e) {
+    // يلا وقع مشكل ف الاتصال كيطبع رسالة واضحة
+    die("Erreur de connexion : " . $e->getMessage());
 }
