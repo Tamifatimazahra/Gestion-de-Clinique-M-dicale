@@ -4,11 +4,13 @@ require_once dirname(__DIR__, 2) . '/config/database.php';
 require_once dirname(__DIR__, 2) . '/src/Repository/SpecialiteRepository.php';
 require_once dirname(__DIR__, 2) . '/src/Repository/UserRepository.php';
 require_once dirname(__DIR__, 2) . '/src/Repository/RendezVousRepository.php';
+require_once dirname(__DIR__, 2) . '/src/Repository/CreneauRepository.php'; 
 
 class AdminController {
     private $specialiteRepo;
     private $userRepo;
     private $rendezVousRepo;
+    private $creneauRepo; 
 
     public function __construct(){
         $database = new Database();
@@ -17,6 +19,7 @@ class AdminController {
         $this->specialiteRepo = new SpecialiteRepository($dbConn);
         $this->userRepo = new UserRepository($dbConn);
         $this->rendezVousRepo = new RendezVousRepository($dbConn);
+        $this->creneauRepo = new CreneauRepository($dbConn); 
     }
     
     public function afficherDashboard(){
@@ -49,36 +52,24 @@ class AdminController {
         
         require_once dirname(__DIR__, 2) . '/templates/admin/specialites_view.php';
     }
-    
-    public function gererMedecins(){
-        if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_medecin'){
-            $nom = trim($_POST['nom']);
-            $prenom = trim($_POST['prenom']);
-            $email = trim($_POST['email']);
-            $password = password_hash($_POST['password'], PASSWORD_BCRYPT); 
-            $id_specialite = intval($_POST['id_specialite']);
 
-            if (!empty($nom) && !empty($email) && !empty($id_specialite)) {
-                $this->userRepo->createMedecin($nom, $prenom, $email, $password, $id_specialite);
-                header('Location: medcins.php');
+    public function gererCreneaux(){
+        if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add_creneau'){
+            $id_medecin   = $_POST['id_medecin'];
+            $date_creneau = $_POST['date_creneau']; 
+            $heure_debut  = $_POST['heure_debut'];  
+            $heure_fin    = $_POST['heure_fin'];    
+
+            if (!empty($id_medecin) && !empty($date_creneau) && !empty($heure_debut) && !empty($heure_fin)){
+                $this->creneauRepo->create($id_medecin, $date_creneau, $heure_debut, $heure_fin);
+                header('Location: creneaux.php');
                 exit();
             }
         }
 
-        if (isset($_GET['action']) && $_GET['action'] === 'toggle_status' && isset($_GET['id']) && isset($_GET['status'])) {
-            $id = intval($_GET['id']);
-            $current_status = intval($_GET['status']);
-            $new_status = ($current_status === 1) ? 0 : 1; 
-
-            $this->userRepo->toggleMedecinStatus($id, $new_status);
-            header('Location: medcins.php');
-            exit();
-        }
-
-        
         $medecins = $this->userRepo->findAllMedecins();
-        $specialites = $this->specialiteRepo->findAll(); 
-
-        require_once dirname(__DIR__, 2) . '/templates/admin/medcins_view.php';
+        $creneaux = $this->creneauRepo->findAllWithMedecin();
+        
+        require_once dirname(__DIR__, 2) . '/templates/admin/creneaux_view.php';
     }
 }

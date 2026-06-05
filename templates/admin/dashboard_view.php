@@ -30,12 +30,13 @@
                     <span class="text-xl font-bold tracking-wider text-clinicPrimary">Med<span class="text-clinicGreen">Flow</span></span>
                 </div>
                 <nav class="space-y-1">
-                    <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-clinicGreen/10 text-clinicGreen font-semibold text-sm border-l-4 border-clinicGreen">Dashboard</a>
+                    <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium transition">Dashboard</a>
                     <a href="medcins.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium transition">Gestion Médecins</a>
                     <a href="specialites.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium transition">Spécialités</a>
+                    <a href="creneaux.php" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-slate-900 text-sm font-medium transition">Horaires Médecins</a>
                 </nav>
             </div>
-            <div class="pt-4 border-t border-slate-100 text-xs text-slate-400 font-semibold">Mode Administrateur</div>
+                <div class="pt-4 border-t border-slate-100 text-xs text-slate-400 font-semibold">Mode Administrateur</div>
         </aside>
 
         <main class="flex-1 overflow-y-auto p-4 md:p-8 flex items-center justify-center">
